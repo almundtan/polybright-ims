@@ -1,0 +1,46 @@
+%% Architecture overview
+```mermaid
+graph TD
+  subgraph Client
+    W[Next.js Web]
+    M[Expo Mobile]
+  end
+  subgraph Server
+    API[Express API]
+    DB[(PostgreSQL)]
+  end
+  W -->|REST /api| API
+  M -->|REST /api| API
+  API -->|Prisma| DB
+  API -->|JSON Logs| LogStore[(AuditLog)]
+```
+
+%% Request flow
+```mermaid
+sequenceDiagram
+  participant User
+  participant Web as Web App
+  participant API as Express API
+  participant DB as PostgreSQL
+  User->>Web: Submit PO Receive
+  Web->>API: POST /api/pos/:id/receive
+  API->>DB: Tx update inventory + ledger
+  DB-->>API: Tx commit
+  API-->>Web: 200 {status}
+  Web-->>User: UI success toast
+```
+
+%% Sync process
+```mermaid
+sequenceDiagram
+  participant Client
+  participant API
+  participant Ledger as StockLedger
+  Client->>Client: Queue mutation offline
+  Client->>API: POST /api/sync/push {mutations}
+  API->>Ledger: Persist audit + ledger entries
+  API-->>Client: {serverClock}
+  Client->>API: GET /api/sync/pull?since=t
+  API-->>Client: {changes, serverClock}
+  Client->>Client: Merge + reconcile
+```
