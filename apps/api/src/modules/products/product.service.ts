@@ -18,17 +18,14 @@ export interface UpsertProductInput {
 
 export const ProductService = {
   async list(orgId: string, filters: ProductFilters) {
-    type ProductFindManyArgs = Exclude<Parameters<typeof prisma.product.findMany>[0], undefined>;
-    type ProductWhere = NonNullable<ProductFindManyArgs['where']>;
-
-    const where: ProductWhere = {
+    const where = {
       orgId,
       ...(filters.search
         ? {
             OR: [
-              { name: { contains: filters.search, mode: 'insensitive' } },
-              { sku: { contains: filters.search, mode: 'insensitive' } },
-              { barcode: { contains: filters.search, mode: 'insensitive' } }
+              { name: { contains: filters.search, mode: 'insensitive' as const } },
+              { sku: { contains: filters.search, mode: 'insensitive' as const } },
+              { barcode: { contains: filters.search, mode: 'insensitive' as const } }
             ]
           }
         : {})

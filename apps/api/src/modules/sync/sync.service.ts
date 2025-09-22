@@ -28,7 +28,7 @@ export const SyncService = {
       }
     });
 
-    type AuditLogPayload = Parameters<typeof prisma.auditLog.create>[0]['data']['payload'];
+    const payload = JSON.parse(JSON.stringify(input));
 
     await prisma.auditLog.create({
       data: {
@@ -36,7 +36,7 @@ export const SyncService = {
         entity: 'SyncMutation',
         entityId: deviceId,
         action: 'PUSH',
-        payload: input as unknown as AuditLogPayload
+        payload
       }
     });
 
