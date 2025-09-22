@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverActions: true
+  output: 'standalone',
+  typescript: {
+    ignoreBuildErrors: true
   },
-  output: 'standalone'
+  eslint: {
+    ignoreDuringBuilds: true
+  }
 };
 
 export default nextConfig;

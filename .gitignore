@@ -54,3 +54,11 @@ apps/mobile/ios/
 # Misc
 .tmp/
 *.sqlite
+LATEX/simplex_method.aux
+LATEX/simplex_method.fdb_latexmk
+LATEX/simplex_method.fls
+LATEX/simplex_method.pdf
+LATEX/simplex_method.synctex.gz
+.tsbuildinfo
+.gitignore
+LATEX/simplex_method.tex
