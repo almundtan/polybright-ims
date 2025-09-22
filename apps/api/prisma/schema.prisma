@@ -49,6 +49,7 @@ model Tenant {
   salesOrders SalesOrder[]
   transfers Transfer[]
   deviceStates DeviceSyncState[]
+  auditLogs  AuditLog[]
   createdAt DateTime @default(now())
 }
 
@@ -211,6 +212,6 @@ model AuditLog {
   action    String
   payload   Json
   createdAt DateTime @default(now())
-  tenant    Tenant   @relation(fields: [orgId], references: [id], onDelete: Cascade)
   userId    String?
+  tenant    Tenant?  @relation(fields: [orgId], references: [id], onDelete: Cascade)
 }
