@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-import { Prisma } from '@prisma/client';
 import { prisma } from '@/utils/prisma';
 
 export interface SyncPushInput {
@@ -29,13 +28,15 @@ export const SyncService = {
       }
     });
 
+    type AuditLogPayload = Parameters<typeof prisma.auditLog.create>[0]['data']['payload'];
+
     await prisma.auditLog.create({
       data: {
         orgId,
         entity: 'SyncMutation',
         entityId: deviceId,
         action: 'PUSH',
-        payload: input as unknown as Prisma.InputJsonValue
+        payload: input as unknown as AuditLogPayload
       }
     });
 

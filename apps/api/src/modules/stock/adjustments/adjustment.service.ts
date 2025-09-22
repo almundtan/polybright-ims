@@ -1,4 +1,5 @@
 import { prisma } from '@/utils/prisma';
+import type { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { logAudit } from '@/utils/audit';
 
@@ -11,7 +12,7 @@ export interface StockAdjustmentInput {
 
 export const StockAdjustmentService = {
   async create(orgId: string, userId: string, input: StockAdjustmentInput) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const inventory = await tx.inventoryBalance.upsert({
         where: {
           orgId_warehouseId_productId: {

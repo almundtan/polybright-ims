@@ -1,4 +1,5 @@
 import { prisma } from '@/utils/prisma';
+import type { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
 export interface SalesOrderItemInput {
@@ -59,7 +60,7 @@ export const SalesOrderService = {
   },
 
   async fulfill(orgId: string, id: string, warehouseId: string) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const so = await tx.salesOrder.findFirst({
         where: { id, orgId },
         include: { items: true }

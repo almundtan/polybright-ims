@@ -1,7 +1,5 @@
 import { prisma } from '@/utils/prisma';
-import { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
-import { AuditLogEntry } from '@/types/logs';
 import { logAudit } from '@/utils/audit';
 
 export interface ProductFilters {
@@ -20,26 +18,30 @@ export interface UpsertProductInput {
 
 export const ProductService = {
   async list(orgId: string, filters: ProductFilters) {
-    const baseFilter: Prisma.ProductWhereInput = {
+    type ProductFindManyArgs = Exclude<Parameters<typeof prisma.product.findMany>[0], undefined>;
+    type ProductWhere = NonNullable<ProductFindManyArgs['where']>;
+
+    const where: ProductWhere = {
       orgId,
       ...(filters.search
         ? {
             OR: [
-              { name: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-              { sku: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
-              { barcode: { contains: filters.search, mode: Prisma.QueryMode.insensitive } }
+              { name: { contains: filters.search, mode: 'insensitive' } },
+              { sku: { contains: filters.search, mode: 'insensitive' } },
+              { barcode: { contains: filters.search, mode: 'insensitive' } }
             ]
           }
         : {})
     };
 
-    const where: Prisma.ProductWhereInput = baseFilter;
+    const take = filters.limit ?? 20;
+    const skip = filters.offset ?? 0;
 
     const [items, total] = await prisma.$transaction([
       prisma.product.findMany({
         where,
-        take: filters.limit ?? 20,
-        skip: filters.offset ?? 0,
+        take,
+        skip,
         orderBy: { createdAt: 'desc' }
       }),
       prisma.product.count({ where })

@@ -1,5 +1,10 @@
 import { prisma } from '@/utils/prisma';
+import type { Prisma } from '@prisma/client';
 import { DateTime } from 'luxon';
+
+type StockLedgerWithRelations = Prisma.StockLedgerGetPayload<{
+  include: { warehouse: true; product: true };
+}>;
 
 export interface LedgerFilter {
   from?: string;
@@ -20,7 +25,7 @@ export const ReportService = {
       productId: filters.productId
     };
 
-    const rows = await prisma.stockLedger.findMany({
+    const rows: StockLedgerWithRelations[] = await prisma.stockLedger.findMany({
       where,
       include: {
         warehouse: true,

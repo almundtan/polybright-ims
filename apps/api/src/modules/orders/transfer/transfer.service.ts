@@ -1,4 +1,5 @@
 import { prisma } from '@/utils/prisma';
+import type { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
 export interface TransferLineInput {
@@ -14,7 +15,7 @@ export interface TransferInput {
 
 export const TransferService = {
   async create(orgId: string, input: TransferInput) {
-    return prisma.$transaction(async (tx) => {
+    return prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const transfer = await tx.transfer.create({
         data: {
           orgId,
