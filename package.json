@@ -13,7 +13,7 @@
     "packages/*"
   ],
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "npx husky install",
     "fmt": "prettier --write .",
     "lint": "npm-run-all lint:api lint:web",
     "lint:api": "npm run lint --workspace apps/api",
