@@ -29,7 +29,14 @@ export const ReportService = {
       orderBy: { createdAt: 'desc' }
     });
 
-    return rows.map((row) => ({
+    const rowsWithRelations = rows as Array<
+      (typeof rows)[number] & {
+        warehouse: { name: string };
+        product: { name: string };
+      }
+    >;
+
+    return rowsWithRelations.map((row) => ({
       id: row.id,
       createdAt: row.createdAt,
       warehouse: row.warehouse.name,
