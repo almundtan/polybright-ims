@@ -62,3 +62,4 @@ LATEX/simplex_method.synctex.gz
 .tsbuildinfo
 .gitignore
 LATEX/simplex_method.tex
+*.tsbuildinfo
