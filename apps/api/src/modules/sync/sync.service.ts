@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/utils/prisma';
 
 export interface SyncPushInput {
@@ -34,7 +35,7 @@ export const SyncService = {
         entity: 'SyncMutation',
         entityId: deviceId,
         action: 'PUSH',
-        payload: input
+        payload: input as unknown as Prisma.InputJsonValue
       }
     });
 

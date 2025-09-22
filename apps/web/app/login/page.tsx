@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 export default function LoginPage() {
   const { login } = useAuth();
-  const [form, setForm] = useState({ email: 'admin@polybright.test', password: 'Admin123!' });
+  const [form, setForm] = useState({ email: 'admin@polybright.test', password: 'K4siqfe2!' });
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: FormEvent) => {

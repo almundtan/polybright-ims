@@ -1,4 +1,5 @@
 import { prisma } from '@/utils/prisma';
+import { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { AuditLogEntry } from '@/types/logs';
 import { logAudit } from '@/utils/audit';
@@ -19,18 +20,20 @@ export interface UpsertProductInput {
 
 export const ProductService = {
   async list(orgId: string, filters: ProductFilters) {
-    const where = {
+    const baseFilter: Prisma.ProductWhereInput = {
       orgId,
       ...(filters.search
         ? {
             OR: [
-              { name: { contains: filters.search, mode: 'insensitive' } },
-              { sku: { contains: filters.search, mode: 'insensitive' } },
-              { barcode: { contains: filters.search, mode: 'insensitive' } }
+              { name: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+              { sku: { contains: filters.search, mode: Prisma.QueryMode.insensitive } },
+              { barcode: { contains: filters.search, mode: Prisma.QueryMode.insensitive } }
             ]
           }
         : {})
     };
+
+    const where: Prisma.ProductWhereInput = baseFilter;
 
     const [items, total] = await prisma.$transaction([
       prisma.product.findMany({

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import type { ParsedQs } from 'qs';
 import { ZodSchema } from 'zod';
 
 export const validateBody = <T>(schema: ZodSchema<T>) =>
@@ -18,7 +19,7 @@ export const validateBody = <T>(schema: ZodSchema<T>) =>
 export const validateQuery = <T>(schema: ZodSchema<T>) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      req.query = schema.parse(req.query);
+      req.query = schema.parse(req.query) as unknown as ParsedQs;
       next();
     } catch (error: unknown) {
       return res.status(400).json({
