@@ -1,7 +1,6 @@
 'use client';
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { v4 as uuid } from 'uuid';
 
 interface OfflineMutation {
   id: string;
@@ -99,8 +98,15 @@ export const OfflineQueueProvider = ({ children }: { children: React.ReactNode }
     };
   }, [flush, isOnline]);
 
+  const createId = useCallback(() => {
+    if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+      return crypto.randomUUID();
+    }
+    return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  }, []);
+
   const enqueue = useCallback(async (mutation: Omit<OfflineMutation, 'id'>) => {
-    const newMutation = { ...mutation, id: uuid() };
+    const newMutation = { ...mutation, id: createId() };
     if (isOnline) {
       try {
         await pushMutations([newMutation]);
@@ -110,7 +116,7 @@ export const OfflineQueueProvider = ({ children }: { children: React.ReactNode }
       }
     }
     setPending((current) => [...current, newMutation]);
-  }, [isOnline]);
+  }, [createId, isOnline]);
 
   const value = useMemo(() => ({ enqueue, pending, isOnline }), [enqueue, pending, isOnline]);
 
