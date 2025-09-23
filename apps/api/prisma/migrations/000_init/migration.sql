@@ -8,12 +8,14 @@ CREATE TABLE "Tenant" (
   "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE TYPE "UserRole" AS ENUM ('admin','staff');
+
 CREATE TABLE "User" (
   "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   "orgId" UUID NOT NULL,
   "email" TEXT NOT NULL UNIQUE,
   "passwordHash" TEXT NOT NULL,
-  "role" TEXT NOT NULL DEFAULT 'staff',
+  "role" "UserRole" NOT NULL DEFAULT 'staff',
   "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CONSTRAINT "User_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "Tenant"("id") ON DELETE CASCADE
 );

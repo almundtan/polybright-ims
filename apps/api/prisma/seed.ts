@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import argon2 from 'argon2';
+import { hashPassword } from '../src/utils/password';
 
 const prisma = new PrismaClient();
 
@@ -15,7 +15,7 @@ async function main() {
     }
   });
 
-  const adminPassword = await argon2.hash('Admin123!');
+  const adminPassword = await hashPassword('Admin123!');
 
   const admin = await prisma.user.upsert({
     where: { email: 'admin@polybright.test' },
