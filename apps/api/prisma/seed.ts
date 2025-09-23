@@ -19,7 +19,10 @@ async function main() {
 
   const admin = await prisma.user.upsert({
     where: { email: 'admin@polybright.test' },
-    update: {},
+    update: {
+      passwordHash: adminPassword,
+      role: 'admin'
+    },
     create: {
       orgId: tenant.id,
       email: 'admin@polybright.test',
